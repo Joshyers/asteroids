@@ -1,6 +1,7 @@
 import pygame
 import sys
-from constants import SCREEN_HEIGHT, SCREEN_WIDTH
+import random
+from constants import SCREEN_HEIGHT, SCREEN_WIDTH, ASTEROID_MIN_RADIUS
 from logger import log_state, log_event
 from player import Player
 from asteroid import Asteroid
@@ -41,6 +42,18 @@ def main():
                     log_event("asteroid_shot")
                     shot.kill()
                     asteroid.kill()
+                    if asteroid.radius <= ASTEROID_MIN_RADIUS:
+                        pass
+                    log_event("asteroid_split")
+                    random_angle = random.uniform(20, 50)
+                    new_vector = asteroid.velocity.rotate(random_angle)
+                    new_vector_2 = asteroid.velocity.rotate(-random_angle)
+                    new_radius = asteroid.radius - ASTEROID_MIN_RADIUS
+                    asteroid_1 = Asteroid(asteroid.position.x, asteroid.position.y, new_radius)
+                    asteroid_1.velocity = new_vector
+                    asteroid_2 = Asteroid(asteroid.position.x, asteroid.position.y, new_radius)
+                    asteroid_2.velocity = new_vector_2
+
 
         for asteroid in asteroids:
             if player.collide_with(asteroid):
